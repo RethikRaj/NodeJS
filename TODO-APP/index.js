@@ -1,6 +1,11 @@
+/*
+Assignment #1 - Trying to code a todo app and store data into the array
+*/
+
 const express = require("express");
 const app = express();
 
+// Middleware to parse JSON data in the request body
 app.use(express.json());
 app.use(express.text());
 
