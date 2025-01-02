@@ -30,7 +30,7 @@ app.get("/admin",function(req,res){
 app.use(requestIncreaser);
 
 // Route Handlers
-app.get("/sum",requestIncreaser,function(req,res){
+app.get("/sum",function(req,res){
     // main logic
     const a = parseInt(req.query.a);
     const b = parseInt(req.query.b);
@@ -38,14 +38,12 @@ app.get("/sum",requestIncreaser,function(req,res){
     res.json({"answer":a+b});
 });
 
-app.get("/multiply",requestIncreaser,function(req,res){
+app.get("/multiply",function(req,res){
     // main logic    
     const a = parseInt(req.query.a);    
     const b = parseInt(req.query.b);
 
     res.json({"answer":a*b});
 });
-
-
 
 app.listen(3000);
