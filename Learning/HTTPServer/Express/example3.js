@@ -29,18 +29,36 @@ const app = express();
 // );
 
 // Example 3: If we send multiple responses during any chaining or anywhere , it will thow an server side error.
+// app.use(
+//     (req,res,next)=>{
+//         console.log("Middleware One ");
+//         next();    
+//     },(req,res,next)=>{
+//         console.log("Middleware Two");
+//         next();
+//         res.send("Hello World");
+//     },
+//     (req,res,next)=>{
+//         console.log("Middleware Three ");    
+//         res.send("Bye World");
+//     }
+// );
+
+// Example 4 : Array of middlewares => Sane Behaviour
 app.use(
+    [
+        (req,res,next)=>{
+            console.log("Middleware One");
+            next();
+        },
+        (req,res,next)=>{
+            console.log("Middleware Two");
+            next();
+        }
+    ],
     (req,res,next)=>{
-        console.log("Middleware One ");
-        next();    
-    },(req,res,next)=>{
-        console.log("Middleware Two");
-        next();
+        console.log("Middleware Three");
         res.send("Hello World");
-    },
-    (req,res,next)=>{
-        console.log("Middleware Three ");    
-        res.send("Bye World");
     }
 );
 
