@@ -3,77 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auth website and connecting frontend to backend</title>
+    <title>Connecting Frontend to Backend</title>
 </head>
 <body>
-    <section>
-        <span>SignUp : </span>
-        <input id="signup-username" type="text" name="password" placeholder="Enter your username"/>
-        <input id="signup-password" type="password" name="password" placeholder="Enter your password"/>
-        <button onclick="signup()">Submit</button>
-    </section>
-    <section>
-        <span>SignIn : </span>
-        <input id="signin-username" type="text" name="password" placeholder="Enter your username"/>
-        <input id="signin-password" type="password" name="password" placeholder="Enter your password"/>
-        <button onclick="signin()">Submit</button>
-    </section>
-    <section>
-        User info : 
-        <div id="user-info">
-
-        </div>
-    </section>
-    <section>
-        <button>Logout</button>
-    </section>
+    <div>
+        <span>SignUp</span>
+        <label>Username : </label>
+        <input type="text" placeholder="Enter your username" id="signup-username">
+        <label>Password : </label>
+        <input type="password" placeholder="Enter your password" id="signup-password">
+        <button onclick="signUp()">SignUp</button>
+    </div>
+    <div>
+        <span>SignIn</span>
+        <label>Username : </label>
+        <input type="text" placeholder="Enter your username" id="signin-username">
+        <label>Password : </label>
+        <input type="password" placeholder="Enter your password" id="signin-password">
+        <button onclick="signIn()">SignIn</button>
+    </div>
+    <div>
+        <span>User Info : </span>
+        <div id ="user-info"></div>
+    </div>
+    <div>
+        <button onclick="logout()">Logout</button>
+    </div>
     <script>
-        async function signup(){
-            try{
-                const username = document.getElementById("signup-username").value;
-                const password = document.getElementById("signup-password").value;
-                const data = await fetch("http://localhost:3000/signup",{
-                    method : "POST",
-                    body : JSON.stringify({username : username, password : password})
-                });
-                const json = await data.json();
-                alert(json.message);
-            }catch(err){
-                console.log(err.message);
-            }
+        async function signUp(){
+            const username = document.getElementById("signup-username").value;
+            const password = document.getElementById("signup-password").value;
+            const response = await fetch("http://localhost:3000/signup",{
+                method : "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({username : username, password : password})
+            });
+            const jsonResponse = await response.json();
+            alert(jsonResponse.message);
         }
 
-        async function signin(){
-            try{
-                const username = document.getElementById("signin-username").value;
-                const password = document.getElementById("signin-password").value;
-                const data = await fetch("http://localhost:3000/signin",{
-                    method : "POST",
-                    body : JSON.stringify({username : username, password : password})
-                });
-                const json = await data.json();
-                // Storing the token
-                localStorage.setItem("token",json.token);
-                alert("You are signed up");
-                
-            }catch(err){
-                console.log(err.message);
-            }
+        async function signIn(){
+            const username = document.getElementById("signin-username").value;
+            const password = document.getElementById("signin-password").value;
+            const response = await fetch("http://localhost:3000/signin",{
+                method : "POST",
+                headers: {
+                    "Content-Type": "application/json" 
+                },
+                body: JSON.stringify({username : username, password : password})
+            });
+            const jsonResponse = await response.json();
+            const token = jsonResponse.token;
+            // Store the token in the localStorage of the website
+            localStorage.setItem("token", token);
+
         }
 
         async function getUserInfo(){
-            try{
-                const userInfo = await fetch("http://localhost:3000/me",{
-                    method : "GET",
-                    headers : {authorization : localStorage.getItem("token")}
-                })
-                const {username} = userInfo;
-                document.getElementById("user-info").innerHTML = `<h1>UserName : ${username}`;
-            }catch(err){
-                console.log(err.message);
-            }
+            const response = await fetch("http://localhost:3000/me",{
+                method : "GET",
+                headers : {
+                    authorization : localStorage.getItem("token")
+                }
+            })
+            const jsonResponse = await response.json();
+            const username = jsonResponse.username;
+
+            document.getElementById("user-info").innerHTML = `<h1> UserName : ${username}<h1>`;
         }
+
         getUserInfo();
+
+        function logout(){
+            localStorage.removeItem("token");
+        }
+
+        
     </script>
 </body>
 </html>
